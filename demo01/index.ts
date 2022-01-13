@@ -13,9 +13,9 @@ app.get("/moikka", (req : express.Request, res : express.Response) => {
 
 app.get("/heippa", (req : express.Request, res : express.Response) => {
 
-    let nimi : any;
-
-    if (req.query.nimi) {
+    let nimi : string;
+    
+    if (typeof req.query.nimi === "string") {
         nimi = req.query.nimi;
     } else {
         nimi = "tuntematon";
