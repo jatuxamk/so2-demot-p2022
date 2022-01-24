@@ -1,37 +1,64 @@
 import { readFile, writeFile } from 'fs/promises'; 
 import path from 'path';
 
-interface Ostos {
+export interface Ostos {
     id : number,
     ostos : string
 }
 
+class ostokset {
 
-const haeOstokset = async () : Promise<any> => {
+    data : Ostos[] = [];
 
-    try  {
+    constructor() {
 
-        let data : string = await readFile(path.resolve(__dirname, "data", "ostokset.json"), "utf-8");
+        readFile(path.resolve(__dirname, "data", "ostokset.json"), "utf-8")
+            .then((dataStr : string) => {
+                this.data = JSON.parse(dataStr);
+            })
+            .catch((e : any) => {
+                this.data = [];
+            });
 
-        return JSON.parse(data);
+    }
 
-    } catch (error) {
+    haeKaikki = async () : Promise<any> => {
 
-        return null;
+        try  {
+
+            return this.data;
+
+        } catch (error) {
+
+            throw {
+                    "status" : 500,
+                    "teksti" : "Tiedostoa ei voitu avata"
+                };
+
+        }
+
+    }
+
+    lisaa = async () : Promise<void> => {
+
+
+
+
+    }
+
+    tallennaOstokset = async (ostokset : Ostos[]) : Promise<any> => {
+
+        try {
+
+            await writeFile(path.resolve(__dirname, "data", "ostokset.json"), JSON.stringify(ostokset, null, 2), "utf-8")
+
+        } catch (error) {
+
+            return null;
+        }
 
     }
 
 }
 
-const tallennaOstokset = async (ostokset : Ostos[]) : Promise<any> => {
-
-    try {
-
-        await writeFile(path.resolve(__dirname, "data", "ostokset.json"), JSON.stringify(ostokset, null, 2), "utf-8")
-
-    } catch (error) {
-
-        return null;
-    }
-
-}
+export default new ostokset();
