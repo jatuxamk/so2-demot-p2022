@@ -10,5 +10,17 @@
   {
     "id": 3,
     "ostos": "Kahvia"
+  },
+  {
+    "id": 4,
+    "ostos": "Omenoita"
+  },
+  {
+    "id": 5,
+    "ostos": "Banaaneja"
+  },
+  {
+    "id": 6,
+    "ostos": "Olutta"
   }
 ]

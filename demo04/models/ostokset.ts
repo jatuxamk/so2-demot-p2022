@@ -8,11 +8,12 @@ export interface Ostos {
 
 class ostokset {
 
-    data : Ostos[] = [];
+    private tiedostonimi : string[] = [__dirname, "data", "ostokset.json"]
+    private data : Ostos[] = [];
 
     constructor() {
 
-        readFile(path.resolve(__dirname, "data", "ostokset.json"), "utf-8")
+        readFile(path.resolve(...this.tiedostonimi), "utf-8")
             .then((dataStr : string) => {
                 this.data = JSON.parse(dataStr);
             })
@@ -22,7 +23,7 @@ class ostokset {
 
     }
 
-    haeKaikki = async () : Promise<any> => {
+    public haeKaikki = async () : Promise<any> => {
 
         try  {
 
@@ -39,22 +40,32 @@ class ostokset {
 
     }
 
-    lisaa = async () : Promise<void> => {
+    public lisaa = async (reqBody : any) : Promise<void> => {
 
+        let uusiOstos = {
+            id : this.data[this.data.length -1].id + 1,
+            ostos : reqBody.ostos
+        }
 
+        this.data = [...this.data, uusiOstos];
+
+        this.tallenna();
 
 
     }
 
-    tallennaOstokset = async (ostokset : Ostos[]) : Promise<any> => {
+    private tallenna = async () : Promise<any> => {
 
         try {
 
-            await writeFile(path.resolve(__dirname, "data", "ostokset.json"), JSON.stringify(ostokset, null, 2), "utf-8")
+            await writeFile(path.resolve(...this.tiedostonimi), JSON.stringify(this.data, null, 2), "utf-8")
 
         } catch (error) {
 
-            return null;
+            return {
+                    "status" : 500,
+                    "teksti" : "Tiedostoa ei voitu tallentaa"
+                };
         }
 
     }

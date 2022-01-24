@@ -5,27 +5,31 @@ const apiRouter : express.Router = express.Router();
 
 apiRouter.use(express.json()); // Otetaan vastaan mahdollinen pyynnön body json-datana
 
+apiRouter.post("/ostokset", async (req : express.Request, res : express.Response) : Promise<void> => {
 
-apiRouter.post("/api/ostokset", async (req : express.Request, res : express.Response) : Promise<void> => {
+    try {
+
+        if (req.body.ostos) {
+
+            ostokset.lisaa(req.body);
+            res.json({ "viesti" : "Uusi ostos lisätty" });
+
+        } else {
+
+            res.status(400).json({ "viesti" : "Virheellinen data" });
+
+        }     
 
 
-    let vanhatOstokset : Ostos[] = await ostokset.haeKaikki();
+    } catch (e : any) {
+        res.status(e.status).json({ "viesti" : e.teksti });
+    }
 
-    let uusiOstos : Ostos = {
-                        id : vanhatOstokset[vanhatOstokset.length -1].id + 1,
-                        ostos : req.body.ostos
-                    }
 
-    vanhatOstokset = [...vanhatOstokset, uusiOstos];
-
-    //tallennaOstokset(ostokset);
-
-    res.json({ "viesti" : "Uusi ostos lisätty" })
 
 });
 
 apiRouter.get("/ostokset", async (req : express.Request, res : express.Response) : Promise<void> => {
-
 
     try {
 
