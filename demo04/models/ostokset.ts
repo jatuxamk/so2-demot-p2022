@@ -49,7 +49,18 @@ class ostokset {
 
         this.data = [...this.data, uusiOstos];
 
-        this.tallenna();
+        await this.tallenna();
+
+
+    }
+
+    public poista = async (id : number) : Promise<any> => {
+
+        this.data = this.data.filter((ostos) => {
+            return ostos.id !== id;
+        })
+
+        await this.tallenna();
 
 
     }
