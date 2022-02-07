@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Routes , Route} from 'react-router-dom'; 
+import {Routes , Route, useNavigate, NavigateFunction} from 'react-router-dom'; 
 import { Container, Typography } from '@mui/material'; 
 import Ostoslista from './components/Ostoslista';
 import Login from './components/Login';
@@ -17,7 +17,9 @@ interface Data {
 
 const App : React.FC = () : React.ReactElement => {
 
-  const [token, setToken] = useState<string>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDQyMjI5MTN9.20A1CbI4pW_BkNoyVMX3wPxoYhZuewbL8uymfqcrvOk")
+  const navigate : NavigateFunction = useNavigate();
+
+  const [token, setToken] = useState<string>(String(localStorage.getItem("jwt")))
 
   const [data, setData] = useState<Data>({
                                             ostokset : [],
@@ -30,6 +32,10 @@ const App : React.FC = () : React.ReactElement => {
     try {
       const yhteys = await fetch("http://localhost:3006/api/ostokset", asetukset);
     
+      if (yhteys.status === 401) {
+        navigate("/login");
+      }
+
       if (yhteys.status === 200) {
 
         const vastaanotettuData = await yhteys.json();
@@ -79,7 +85,7 @@ const App : React.FC = () : React.ReactElement => {
       
       <Routes>
         <Route path="/" element={<Ostoslista data={data} setData={setData} token={token} apiKutsu={apiKutsu}/>}/>
-        <Route path="/login" element={<Login/>}/>
+        <Route path="/login" element={<Login setToken={setToken}/>}/>
       </Routes>
 
       

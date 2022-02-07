@@ -1,28 +1,24 @@
 import express, {NextFunction} from 'express';
 import apiRouter from './routes/api';
+import authRouter from './routes/auth';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 const app : express.Application = express();
 
-const portti : number = Number(process.env.PORT) || 3006;
+const portti : number = Number(process.env.PORT);
 
-app.use(cors({
-                "origin" : "*",
-                "optionsSuccessStatus" : 204 
-            }));
-
-app.use((req : express.Request, res : express.Response, next : NextFunction) => {
-    setTimeout(next, 1000);
-});
-
-app.use((req : express.Request, res : express.Response, next : NextFunction) => {
+const checkToken = (req : express.Request, res : express.Response, next : NextFunction) : NextFunction | void => {
     
     try {
 
         let token : string | undefined = req.headers.authorization!.split(" ")[1];
       
-        let payload =  jwt.verify(token, "SuuriSalaisuus!!!", {  algorithms : ["HS256"] });
+        let payload =  jwt.verify(token, String(process.env.ACCESS_TOKEN_SECRET), {  algorithms : ["HS256"] });
 
         next();
 
@@ -32,10 +28,16 @@ app.use((req : express.Request, res : express.Response, next : NextFunction) => 
 
     }
 
+}
 
-});
+app.use(cors({
+                "origin" : "*",
+                "optionsSuccessStatus" : 204 
+            }));
 
-app.use("/api/", apiRouter);
+app.use("/auth/", authRouter);
+
+app.use("/api/", checkToken , apiRouter);
 
 app.listen(portti, () => {
 
