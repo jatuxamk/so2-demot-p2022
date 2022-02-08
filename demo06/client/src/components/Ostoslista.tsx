@@ -1,4 +1,4 @@
-import React, { useRef, Dispatch, SetStateAction } from 'react';
+import React, { useRef, Dispatch, SetStateAction, useEffect } from 'react';
 import { Alert, Backdrop, Button, CircularProgress, List, ListItem, ListItemText, Stack, TextField } from '@mui/material'; 
 
 interface Ostos {
@@ -48,7 +48,14 @@ const Ostoslista : React.FC<Props> = (props : Props) : React.ReactElement => {
 
   }
 
-
+  useEffect(() => {
+    props.apiKutsu({
+              method : "GET",
+              headers : {
+                'Authorization' : `Bearer ${props.token}`
+              }
+            });    
+  }, []);
 
   return (Boolean(props.data.virhe))
       ? <Alert severity="error">

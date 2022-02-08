@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {Routes , Route, useNavigate, NavigateFunction} from 'react-router-dom'; 
 import { Container, Typography } from '@mui/material'; 
 import Ostoslista from './components/Ostoslista';
@@ -32,10 +32,6 @@ const App : React.FC = () : React.ReactElement => {
     try {
       const yhteys = await fetch("http://localhost:3006/api/ostokset", asetukset);
     
-      if (yhteys.status === 401) {
-        navigate("/login");
-      }
-
       if (yhteys.status === 200) {
 
         const vastaanotettuData = await yhteys.json();
@@ -48,10 +44,18 @@ const App : React.FC = () : React.ReactElement => {
   
       } else {
 
-        setData({
-          ...data,
-          virhe : `Palvelin ei palauttanut dataa. (status : ${yhteys.status})`
-        });
+        if (yhteys.status === 401) {
+
+          navigate("/login");
+        
+        } else { 
+
+          setData({
+            ...data,
+            virhe : `Palvelin ei palauttanut dataa. (status : ${yhteys.status})`
+          });
+        
+        }
 
       }
       
@@ -67,15 +71,6 @@ const App : React.FC = () : React.ReactElement => {
 
   }
   
-  useEffect(() => {
-    apiKutsu({
-              method : "GET",
-              headers : {
-                'Authorization' : `Bearer ${token}`
-              }
-            });    
-  }, []);
-
   return (
     <Container>
       
