@@ -45,7 +45,7 @@ const Blogi : React.FC = () : React.ReactElement => {
                         <Stack spacing={1}>
                           <Typography variant="h5">{teksti.otsikko}</Typography>
                           <Typography variant="body2">{format(parseJSON(teksti.createdAt), "dd.MM.yyyy  HH:mm")}</Typography>
-                          <Typography variant="body2"><span dangerouslySetInnerHTML={ {__html: teksti.sisalto} } /></Typography>
+                          <Typography variant="body2"><span dangerouslySetInnerHTML={ {__html : teksti.sisalto} }/></Typography>
                         </Stack>
                     </Box>
             })}
