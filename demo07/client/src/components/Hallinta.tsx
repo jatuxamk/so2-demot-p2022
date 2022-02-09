@@ -3,7 +3,7 @@ import { Alert, Backdrop, Button, CircularProgress, Typography, ListItem, ListIt
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Data {
-  blogitekstit: any[];
+  blogikirjoitukset: any[];
   virhe: string;
   dataHaettu: boolean;
 }
@@ -11,7 +11,7 @@ interface Data {
 const Hallinta: React.FC = (): React.ReactElement => {
 
     const [data, setData] = useState<Data>({
-        blogitekstit: [],
+        blogikirjoitukset: [],
         virhe: "",
         dataHaettu: false,
     });
@@ -19,13 +19,27 @@ const Hallinta: React.FC = (): React.ReactElement => {
 
     const haeBlogitekstit = async (): Promise<void> => {
 
-        const yhteys = await fetch("/api/blogitekstit");
+        try {
 
-        setData({
-        ...data,
-        blogitekstit: await yhteys.json(),
-        dataHaettu: true,
-        });
+            const yhteys = await fetch("/api");
+      
+            const blogikirjoitukset = await yhteys.json();
+      
+            setData({
+              ...data,
+              blogikirjoitukset : blogikirjoitukset,
+              dataHaettu : true
+            });
+      
+          } catch (e : any) {
+      
+            setData({
+              ...data,
+              virhe : "Palvelimeen ei saada yhteyttä.",
+              dataHaettu : true
+            });
+      
+          }
     };
 
     useEffect(() => {
@@ -44,7 +58,7 @@ const Hallinta: React.FC = (): React.ReactElement => {
             ) : data.dataHaettu ? (
                 <List>
                 
-                {data.blogitekstit.map((teksti: any, idx: number) => {
+                {data.blogikirjoitukset.map((teksti: any, idx: number) => {
                     return (
                     <ListItem key={idx} sx={{ paddingTop: 2 }}>
                         <ListItemText primary={teksti.otsikko} />
