@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Blogiteksti" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "otsikko" TEXT NOT NULL,
+    "sisalto" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
