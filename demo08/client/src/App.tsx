@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
-import {Button, Container, Grid, Typography, Paper, Stack, TextField} from '@mui/material'; 
+import React, { useRef, useState } from 'react';
+import {Button, Container, FormControl, FormLabel, FormControlLabel, RadioGroup, Grid, Radio, Typography, Paper, Stack, TextField} from '@mui/material'; 
 
 const App : React.FC = () : React.ReactElement => {
 
   const lomakeRef = useRef<any>();
+  const [kayttajat, setKayttajat] = useState<any[]>([])
 
   const kaynnistaHaku = async (e : React.FormEvent) : Promise<void> => {
 
@@ -12,10 +13,14 @@ const App : React.FC = () : React.ReactElement => {
 
     try {
 
-        let reitti : string = `/api/kayttajat?hakusana=${lomakeRef.current.hakusana.value}`;
+        let reitti : string = `/api/kayttajat?hakusana=${lomakeRef.current.hakusana.value}&sukupuoli=${lomakeRef.current.sukupuoli.value}`;
+
+                                console.log(reitti);
 
         const yhteys = await fetch(reitti);
         const data = await yhteys.json();
+
+        setKayttajat(data);
 
         console.log(data);
 
@@ -68,15 +73,14 @@ const App : React.FC = () : React.ReactElement => {
           </Grid>
 
           <FormControl>
-            <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+            <FormLabel>Sukupuoli</FormLabel>
             <RadioGroup
               row
-              aria-labelledby="demo-row-radio-buttons-group-label"
               name="sukupuoli"
             >
-              <FormControlLabel value="female" control={<Radio />} label="Female" />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel value="other" control={<Radio />} label="Other" />
+              <FormControlLabel value="nainen" control={<Radio />} label="Nainen" />
+              <FormControlLabel value="mies" control={<Radio />} label="Mies" />
+              <FormControlLabel value="" control={<Radio />} label="Ei merkitystä" />
             </RadioGroup>
           </FormControl>
 
@@ -84,6 +88,8 @@ const App : React.FC = () : React.ReactElement => {
 
 
       </Paper>
+
+      {JSON.stringify(kayttajat)}
 
     </Container>
   );

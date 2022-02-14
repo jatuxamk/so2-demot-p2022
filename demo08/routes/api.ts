@@ -1,5 +1,5 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient()
 
@@ -11,8 +11,16 @@ apiRouter.get("/kayttajat", async (req : express.Request, res :express.Response 
 
         let hakusana : string = `%${String(req.query.hakusana)}%`;
 
-        let kayttajat = await prisma.$queryRaw`SELECT * FROM kayttaja WHERE etunimi LIKE ${hakusana} OR sukunimi LIKE ${hakusana} LIMIT 10`;
+        let sukupuoli : string = String(req.query.sukupuoli);
+
+        let kayttajat = await prisma.$queryRaw`SELECT * FROM kayttaja WHERE 
+                                                etunimi LIKE ${hakusana} OR 
+                                                sukunimi LIKE ${hakusana} 
+                                                ${ (sukupuoli) ? Prisma.sql`AND sukupuoli = ${sukupuoli}` :  Prisma.empty }
+                                                LIMIT 10`;
     
+
+                                                
         res.json(kayttajat);
 
     }
