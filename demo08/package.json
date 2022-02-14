@@ -1,0 +1,19 @@
+{
+  "name": "demo08",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "npx nodemon index.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^3.9.2",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.17",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "prisma": "^3.9.2"
+  }
+}
