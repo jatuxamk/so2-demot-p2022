@@ -7,9 +7,9 @@ const apiRouter : express.Router = express.Router();
 
 apiRouter.get("/", async (req : express.Request, res :express.Response ) => {
 
-    let ostokset = await prisma.ostos.findMany();
+    let kayttajat = await prisma.kayttaja.findMany();
 
-    res.json(ostokset);
+    res.json(kayttajat);
 
 });
 
