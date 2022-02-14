@@ -5,11 +5,18 @@ const prisma = new PrismaClient()
 
 const apiRouter : express.Router = express.Router();
 
-apiRouter.get("/", async (req : express.Request, res :express.Response ) => {
+apiRouter.get("/kayttajat", async (req : express.Request, res :express.Response ) => {
 
-    let kayttajat = await prisma.kayttaja.findMany();
+    if (typeof req.query.hakusana === "string") {
 
-    res.json(kayttajat);
+        let hakusana : string = `%${String(req.query.hakusana)}%`;
+
+        let kayttajat = await prisma.$queryRaw`SELECT * FROM kayttaja WHERE etunimi LIKE ${hakusana} OR sukunimi LIKE ${hakusana} LIMIT 10`;
+    
+        res.json(kayttajat);
+
+    }
+
 
 });
 
