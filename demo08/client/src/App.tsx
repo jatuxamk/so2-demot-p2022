@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
-import {Button, Container, FormControl, FormLabel, FormControlLabel, RadioGroup, Grid, Radio, Typography, Paper, Stack, TextField} from '@mui/material'; 
+import {Alert, Button, Container, FormControl, List, ListItem, ListItemText, FormLabel, FormControlLabel, RadioGroup, Grid, Radio, Typography, Paper, Stack, TextField} from '@mui/material'; 
 
 const App : React.FC = () : React.ReactElement => {
 
   const lomakeRef = useRef<any>();
-  const [kayttajat, setKayttajat] = useState<any[]>([])
+  const [kayttajat, setKayttajat] = useState<any[]>([]);
+  const [virhe, setVirhe] = useState<string>("");
 
   const kaynnistaHaku = async (e : React.FormEvent) : Promise<void> => {
 
@@ -22,11 +23,9 @@ const App : React.FC = () : React.ReactElement => {
 
         setKayttajat(data);
 
-        console.log(data);
-
     } catch (e: any) {
 
-      console.log(e)
+      setVirhe("Palvelimelle ei saada yhteyttä.")
 
     } 
 
@@ -89,7 +88,19 @@ const App : React.FC = () : React.ReactElement => {
 
       </Paper>
 
-      {JSON.stringify(kayttajat)}
+      {(Boolean(virhe)) 
+        ? <Alert severity="error">{virhe}</Alert>
+        : <List>{kayttajat.map((kayttaja, idx) => {
+          return <ListItem key={idx}>
+                    <ListItemText 
+                      primary={`${kayttaja.etunimi} ${kayttaja.sukunimi}`}
+                      secondary={`${kayttaja.kaupunki}, ${kayttaja.maa} ${kayttaja.sahkoposti}`}  
+                    />
+                  </ListItem>
+        })}</List>
+      }
+
+      
 
     </Container>
   );
