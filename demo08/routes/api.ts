@@ -14,8 +14,8 @@ apiRouter.get("/kayttajat", async (req : express.Request, res :express.Response 
         let sukupuoli : string = String(req.query.sukupuoli);
 
         let kayttajat = await prisma.$queryRaw`SELECT * FROM kayttaja WHERE 
-                                                etunimi LIKE ${hakusana} OR 
-                                                sukunimi LIKE ${hakusana} 
+                                                (etunimi LIKE ${hakusana} OR 
+                                                sukunimi LIKE ${hakusana}) 
                                                 ${ (sukupuoli) ? Prisma.sql`AND sukupuoli = ${sukupuoli}` :  Prisma.empty }
                                                 LIMIT 10`;
     
