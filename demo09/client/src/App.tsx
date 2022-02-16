@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Alert, Backdrop, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Container, Link, List, ListItem, ListItemText, Stack, TextField, Typography } from '@mui/material'; 
-import { typography } from '@mui/system';
+import { format, parseISO, parseJSON } from 'date-fns';
 
 interface Uutinen {
   otsikko : string,
@@ -105,6 +105,9 @@ const App : React.FC = () : React.ReactElement => {
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {data.uutiset[indeksi].otsikko}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {format(parseJSON(data.uutiset[indeksi].julkaistu), "dd.MM.yyyy HH:mm")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {data.uutiset[indeksi].sisalto}
